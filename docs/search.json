@@ -1,24 +1,10 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Janette Phan",
     "section": "",
-    "text": "About this blog"
-  },
-  {
-    "objectID": "assignment01.html",
-    "href": "assignment01.html",
-    "title": "Assignment 01",
-    "section": "",
-    "text": "This website is created using RStudio Quarto with the Cosmo theme for a clean and professional look. The navigation bar includes multiple tabs that connect to different areas of content, such as the Home page, Assignments for EPPS 6302: Methods of Data Collection and Production, and my CV/Resume.\nWhile it is currently designed to organize and showcase course assignments, the site will gradually develop into a portfolio of projects that reflects my academic and professional interests."
-  },
-  {
-    "objectID": "posts/post-with-code/index.html",
-    "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
-    "section": "",
-    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
+    "text": "I’m Janette Phan, a graduate student in Applied Cognition and Neuroscience at UT Dallas. My background is in Cognitive Science with a focus on cognitive neuroscience and AI, and I’m interested in using data and research to better understand how people think, learn, and interact with technology."
   },
   {
     "objectID": "posts/welcome/index.html",
@@ -28,10 +14,17 @@
     "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Janette Phan",
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
     "section": "",
-    "text": "I’m Janette Phan, a graduate student in Applied Cognition and Neuroscience at UT Dallas. My background is in Cognitive Science with a focus on cognitive neuroscience and AI, and I’m interested in using data and research to better understand how people think, learn, and interact with technology."
+    "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "assignment01.html",
+    "href": "assignment01.html",
+    "title": "Assignment 01",
+    "section": "",
+    "text": "This website is created using RStudio Quarto with the Cosmo theme for a clean and professional look. The navigation bar includes multiple tabs that connect to different areas of content, such as the Home page, Assignments for EPPS 6302: Methods of Data Collection and Production, and my CV/Resume.\nWhile it is currently designed to organize and showcase course assignments, the site will gradually develop into a portfolio of projects that reflects my academic and professional interests."
   }
 ]
