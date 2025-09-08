@@ -1,0 +1,8 @@
+---
+title: "Assignment 01"
+format: html
+---
+
+This website is created using RStudio Quarto with the Cosmo theme for a clean and professional look. The navigation bar includes multiple tabs that connect to different areas of content, such as the Home page, Assignments for EPPS 6302: Methods of Data Collection and Production, and my CV/Resume.
+
+While it is currently designed to organize and showcase course assignments, the site will gradually develop into a portfolio of projects that reflects my academic and professional interests.

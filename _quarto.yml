@@ -1,26 +1,31 @@
 project:
   type: website
   output-dir: "docs"
+  resources:
+    - files/*
 website:
   title: "Janette Phan"
   navbar:
     left:
       - text: "Home"
         file: index.qmd
-      - text: "Portfolio"
-        file: portfolio.qmd
+      - text: "Assignments"
+        menu:
+          - assignment01.qmd
+          - assignment02.qmd
+      - text: "CV/Resume"
+        file: Resume.qmd
+
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/phanjanette
+      - icon: linkedIn
+        href: https://www.linkedin.com/in/janettephan04/
 format:
   html:
-    theme:
-      - cosmo
-      - brand
+    theme: cosmo
     css: styles.css
-
+    toc: true
 editor: visual
 
