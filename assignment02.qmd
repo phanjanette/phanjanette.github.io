@@ -73,8 +73,9 @@ if (!is.null(api_res)) {
 head(the_df)
 
 # Plot API data
+# Personal note:The API data (the_df) is in "long" format because gtrendsR returns a tidy dataset
 ggplot(the_df, aes(x = date, y = hits, color = keyword)) +
-  geom_line(size = 1) +
+  geom_line(linewidth = 1) +
   labs(title = "Google Trends (API): Trump, Harris, Election",
        x = "Date", y = "Search Interest") +
   theme_minimal()
