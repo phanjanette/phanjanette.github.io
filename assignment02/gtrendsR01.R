@@ -3,7 +3,7 @@
 
 install.packages("gtrendsR")
 library(gtrendsR)
-TrumpHarrisElection = gtrends(c("Trump","Harris","election"), onlyInterest = TRUE, geo = "US", gprop = "web", time = "today+5-y", category = 0, ) # last five years
+TrumpHarrisElection = gtrends(c("Trump","Harris","election"), onlyInterest = TRUE, geo = "US", gprop = "web", time = "today+5-y", category = 0 ) # last five years
 the_df=TrumpHarrisElection$interest_over_time
 plot(TrumpHarrisElection)
 tg = gtrends("tariff", time = "all")

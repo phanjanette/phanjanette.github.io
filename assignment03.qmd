@@ -1,0 +1,87 @@
+---
+title: "Assignment 3: Mapping Census Data"
+format: html
+---
+
+# Mapping Census Data
+
+In this assignment, I decided to adjust the tidycensus01.R code to look at the labor force dynamics across Michigan counties from ACS. The analysis looks at the size of the civilian labor force and the number of the unemployed population. The analysis identifies the counties with the highest and lowest unemployment rates.
+
+
+```{r}
+# Packages
+library(tidycensus)
+library(tigris)
+library(sf)
+library(dplyr)
+library(ggplot2)
+library(readr)
+
+options(tigris_use_cache = TRUE)
+
+# 1) API key (uncomment and paste your key)
+census_api_key("991adc56800ae3c63abc4d1f74bc78711191233d", install = FALSE)
+
+# 2) Explore variables
+vars <- load_variables(2023, "acs5", cache = TRUE)
+
+# 3) Parameters
+state_abbr <- "MI"
+geo_level  <- "county"   # options: state, county, tract, block group
+my_vars    <- c(labor_force = "B23025_003", unemployed = "B23025_005")
+year_acs   <- 2022
+survey     <- "acs5"
+
+# 4) Download
+acs <- get_acs(
+  geography = geo_level,
+  variables = my_vars,
+  state = state_abbr,
+  year = year_acs,
+  survey = survey,
+  geometry = TRUE
+)
+
+# 5) Wide format for convenience
+acs_wide <- acs |>
+  tidyr::pivot_wider(
+    id_cols = c(GEOID, NAME, geometry),
+    names_from = variable,
+    values_from = c(estimate, moe)
+  ) |>
+  # Add computed rate here
+  mutate(
+    unemployment_rate = estimate_unemployed / estimate_labor_force
+  )
+
+
+# 6) Map (Unemployment Rate)
+ggplot(acs_wide) +
+  geom_sf(aes(fill = unemployment_rate), color = NA) +
+  scale_fill_viridis_c(name = "Unemployment Rate", labels = scales::percent) +
+  labs(
+    title = paste0("ACS ", year_acs, " 5-year: Unemployment Rate — ", state_abbr, " (", geo_level, ")"),
+    caption = "Source: U.S. Census Bureau via tidycensus"
+  ) +
+  theme_minimal()
+
+
+# 7) Table (top/bottom by unemployment rate)
+top10 <- acs_wide |>
+  arrange(desc(unemployment_rate)) |>
+  select(NAME, unemployment_rate, estimate_unemployed, estimate_labor_force) |>
+  slice_head(n = 10)
+
+bottom10 <- acs_wide |>
+  arrange(unemployment_rate) |>
+  select(NAME, unemployment_rate, estimate_unemployed, estimate_labor_force) |>
+  slice_head(n = 10)
+
+
+top10
+bottom10
+
+# 8) Save outputs (optional)
+readr::write_csv(st_drop_geometry(acs_wide), "acs_data.csv")
+
+```
