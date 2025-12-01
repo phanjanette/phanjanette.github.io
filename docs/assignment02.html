@@ -144,6 +144,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="./assignment02.html">
  <span class="dropdown-text">Assignment 2: Google Trends Data</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./assignment03.html">
+ <span class="dropdown-text">Assignment 3: Mapping Census Data</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -293,12 +297,12 @@ The CSV provides weekly intervals of search interest for each term.</p>
 <span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(the_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        date hits keyword geo       time gprop category
-1 2024-09-15    7   Trump  US today 12-m   web        0
-2 2024-09-22    3   Trump  US today 12-m   web        0
-3 2024-09-29    4   Trump  US today 12-m   web        0
-4 2024-10-06    4   Trump  US today 12-m   web        0
-5 2024-10-13    5   Trump  US today 12-m   web        0
-6 2024-10-20    6   Trump  US today 12-m   web        0</code></pre>
+1 2024-11-17   24   Trump  US today 12-m   web        0
+2 2024-11-24   16   Trump  US today 12-m   web        0
+3 2024-12-01   13   Trump  US today 12-m   web        0
+4 2024-12-08   13   Trump  US today 12-m   web        0
+5 2024-12-15   12   Trump  US today 12-m   web        0
+6 2024-12-22   11   Trump  US today 12-m   web        0</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot API data</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Personal note:The API data (the_df) is in "long" format because gtrendsR returns a tidy dataset</span></span>

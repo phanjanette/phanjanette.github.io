@@ -11,6 +11,7 @@ website:
         menu:
           - assignment01.qmd
           - assignment02.qmd
+          - assignment03.qmd
       - text: "Reviews"
         file: reviews.qmd
       - text: "CV/Resume"

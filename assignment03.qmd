@@ -7,7 +7,6 @@ format: html
 
 In this assignment, I decided to adjust the tidycensus01.R code to look at the labor force dynamics across Michigan counties from ACS. The analysis looks at the size of the civilian labor force and the number of the unemployed population. The analysis identifies the counties with the highest and lowest unemployment rates.
 
-
 ```{r}
 # Packages
 library(tidycensus)

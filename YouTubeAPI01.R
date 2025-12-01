@@ -2,14 +2,15 @@
 
 # Required Libraries
 # Install if necessary
-# install.packages("tuber")
-# install.packages("tidyverse")
-# install.packages("lubridate")
-# install.packages("stringi")
-# install.packages("wordcloud")
-# install.packages("gridExtra")
-# install.packages("httr")
-# install.packages("tm")
+install.packages("tuber")
+install.packages("tidyverse")
+install.packages("lubridate")
+install.packages("stringi")
+install.packages("wordcloud")
+install.packages("gridExtra")
+install.packages("httr")
+install.packages("tm")
+install.packages("httpuv")
 
 library(tuber)
 library(tidyverse)
@@ -19,6 +20,7 @@ library(wordcloud)
 library(gridExtra)
 library(httr)
 library(tm)
+
 
 
 ### Step 1: Apply for the Google YouTube API
@@ -40,7 +42,9 @@ library(tm)
 #### Use your Client ID and Client Secret to authenticate.
 
 # Replace with your actual Client ID and Client Secret
-yt_oauth("YourClientID", "YourClientSecret", token = "")
+# Current: Client 3
+yt_oauth("865468874896-4umjqfk3mt3inq7ldfb29ljjbp7tnc10.apps.googleusercontent.com", "
+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", token = "")
 
 ### Important:  when running for first time, you will be prompted to:
 ### 1. add the .httr-oauth to .gitignore, select 1 to consent. 

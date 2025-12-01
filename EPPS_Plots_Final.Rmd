@@ -1,0 +1,312 @@
+---
+title: "Dallas County: Education vs Crime — Interactive Visuals & Regression Models"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: false
+    self_contained: true
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 9,
+  fig.height = 5.4
+)
+```
+
+# Overview
+
+This report explores how **educational outcomes** (Graduation Rate and College/Career/Military Readiness — **CCMR**) relate to **violent** and **property crime** across **Dallas County** districts.
+
+-   **ViolentRate** and **PropertyRate** = crime **per 1,000 residents**\
+-   **PovertyRate** = **percent in poverty**
+
+All visualizations are **interactive Plotly charts**.\
+Regression models are shown using **`lm()`** and **`sjPlot::tab_model()`**.
+
+------------------------------------------------------------------------
+
+# Packages
+
+```{r packages}
+pkgs <- c(
+  "tidyverse", "ggplot2", "plotly",
+  "viridisLite", "scales", "readr", "sjPlot"
+)
+to_install <- pkgs[!pkgs %in% rownames(installed.packages())]
+if (length(to_install)) install.packages(to_install, repos = "https://cloud.r-project.org")
+
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(viridisLite)
+library(scales)
+library(readr)
+library(sjPlot)
+```
+
+------------------------------------------------------------------------
+
+# Data Load & Cleaning
+
+```{r data}
+df <- readr::read_csv("FinalData.csv", show_col_types = FALSE)
+
+required_cols <- c(
+  "Name", "GraduationRates", "CCMR.Grads",
+  "ViolentRate", "PropertyRate", "PovertyRate", "TotalPopulation"
+)
+
+missing_cols <- setdiff(required_cols, names(df))
+if (length(missing_cols) > 0) {
+  stop(sprintf("Missing expected columns: %s", paste(missing_cols, collapse = ", ")))
+}
+
+df <- df |>
+  filter(
+    !is.na(GraduationRates),
+    !is.na(`CCMR.Grads`),
+    !is.na(ViolentRate),
+    !is.na(PropertyRate)
+  ) |>
+  mutate(
+    District = Name,
+    `Poverty (%)` = PovertyRate,
+    Pop = TotalPopulation,
+    `Violent Crime Rate` = ViolentRate,
+    `Property Crime Rate` = PropertyRate,
+    `Grad Rate (%)` = GraduationRates,
+    `CCMR (%)` = `CCMR.Grads`,
+    hover_txt = paste0(
+      "<b>", District, "</b>",
+      "<br>Grad Rate: ", round(`Grad Rate (%)`, 1), "%",
+      "<br>CCMR: ", round(`CCMR (%)`, 1), "%",
+      "<br>Violent Crime Rate: ", round(`Violent Crime Rate`, 2), " per 1,000",
+      "<br>Property Crime Rate: ", round(`Property Crime Rate`, 2), " per 1,000",
+      "<br>Poverty: ", round(`Poverty (%)`, 1), "%",
+      "<br>Population: ", scales::comma(Pop)
+    )
+  )
+
+glimpse(df)
+```
+
+------------------------------------------------------------------------
+
+# Interactive Plots
+
+## 1. Graduation vs Violent Crime Rate
+
+```{r p_interactive}
+p <- ggplot(
+  df,
+  aes(
+    x = `Violent Crime Rate`,
+    y = `Grad Rate (%)`,
+    text = hover_txt,
+    color = `Poverty (%)`
+  )
+) +
+  geom_point(size = 3, alpha = 0.85) +
+  geom_smooth(method = "lm", se = TRUE, alpha = 0.15) +
+  scale_color_gradientn(colors = viridis(256), name = "Poverty (%)") +
+  labs(
+    title = "Graduation Rate vs Violent Crime Rate",
+    x = "Violent crime rate (per 1,000 residents)",
+    y = "Graduation Rate (%)"
+  ) +
+  theme_minimal(base_size = 13)
+
+ggplotly(p, tooltip = "text")
+```
+
+------------------------------------------------------------------------
+
+## 2. CCMR vs Property Crime Rate
+
+```{r q_interactive}
+q <- ggplot(
+  df,
+  aes(
+    x = `Property Crime Rate`,
+    y = `CCMR (%)`,
+    text = hover_txt,
+    color = `Poverty (%)`
+  )
+) +
+  geom_point(size = 3, alpha = 0.85) +
+  geom_smooth(method = "lm", se = TRUE, alpha = 0.15) +
+  scale_color_gradientn(colors = viridis(256), name = "Poverty (%)") +
+  labs(
+    title = "CCMR vs Property Crime Rate",
+    x = "Property crime rate (per 1,000 residents)",
+    y = "CCMR (%)"
+  ) +
+  theme_minimal(base_size = 13)
+
+ggplotly(q, tooltip = "text")
+```
+
+------------------------------------------------------------------------
+
+## 3. Correlation Heatmap
+
+```{r heatmap_interactive}
+# Select numeric variables of interest
+corr_df <- df |>
+  dplyr::select(
+    `Grad Rate (%)`,
+    `CCMR (%)`,
+    `Violent Crime Rate`,
+    `Property Crime Rate`,
+    `Poverty (%)`
+  )
+
+# Correlation matrix
+corr_mat <- round(cor(corr_df, use = "pairwise.complete.obs"), 2)
+
+# Convert to long format
+corr_long <- as.data.frame(as.table(corr_mat))
+colnames(corr_long) <- c("Var1", "Var2", "Correlation")
+
+corr_long <- corr_long |>
+  mutate(
+    hover_txt = paste0(
+      "<b>", Var1, "</b> vs <b>", Var2, "</b>",
+      "<br>Correlation: ", sprintf("%.2f", Correlation)
+    )
+  )
+
+heatmap <- ggplot(
+  corr_long,
+  aes(
+    x = Var1,
+    y = Var2,
+    fill = Correlation,
+    text = hover_txt
+  )
+) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "blue",
+    mid = "white",
+    high = "red",
+    midpoint = 0,
+    name = "Correlation"
+  ) +
+  geom_text(aes(label = sprintf("%.2f", Correlation)), size = 3) +
+  coord_equal() +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold")
+  ) +
+  labs(
+    title = "Correlation Heatmap: Education, Crime, and Poverty",
+    x = NULL,
+    y = NULL
+  )
+
+ggplotly(heatmap, tooltip = "text")
+```
+
+------------------------------------------------------------------------
+
+## 4. Property Crime Rate vs Violent Crime Rate
+
+```{r r_interactive}
+r <- ggplot(
+  df,
+  aes(
+    x = `Property Crime Rate`,
+    y = `Violent Crime Rate`,
+    text = hover_txt,
+    color = `Poverty (%)`
+  )
+) +
+  geom_point(size = 3, alpha = 0.85) +
+  scale_color_gradientn(colors = viridis(256), name = "Poverty (%)") +
+  labs(
+    title = "Property vs Violent Crime Rates",
+    x = "Property crime rate (per 1,000 residents)",
+    y = "Violent crime rate (per 1,000 residents)"
+  ) +
+  theme_minimal(base_size = 13)
+
+ggplotly(r, tooltip = "text")
+```
+
+------------------------------------------------------------------------
+
+# Regression Models
+
+Your regression code, unchanged, running on the same CSV (read separately as `dat`):
+
+```{r regression_models}
+#Install needed packages if necessary
+library(tidyverse)
+library(sjPlot)
+
+dat <- read.csv("FinalData.csv")
+
+### Regression Models
+v1 <- lm(ViolentRate ~ CCMR.Grads + GraduationRates + PovertyRate + 
+           MobilityRate + heterogeneity6, data = dat)
+tab_model(v1)
+
+v2 <- lm(ViolentRate ~ CCMR.College + GraduationRates + PovertyRate + 
+           MobilityRate + heterogeneity6, data = dat)
+tab_model(v2)
+
+v3 <- lm(ViolentRate ~ TSI.Both + TSI.Either + DualCredit + APBI + Associates + 
+           OnRamps + GraduationRates + PovertyRate + MobilityRate + heterogeneity6, 
+         data = dat)
+tab_model(v3)
+
+p1 <- lm(PropertyRate ~ CCMR.Grads + GraduationRates + PovertyRate + 
+           MobilityRate + heterogeneity6, data = dat)
+tab_model(p1)
+
+p2 <- lm(PropertyRate ~ CCMR.College + GraduationRates + PovertyRate + 
+           MobilityRate + heterogeneity6, data = dat)
+tab_model(p2)
+
+p3 <- lm(PropertyRate ~ TSI.Both + TSI.Either + DualCredit + APBI + Associates + 
+           OnRamps + GraduationRates + PovertyRate + MobilityRate + heterogeneity6, 
+         data = dat)
+tab_model(p3)
+```
+
+------------------------------------------------------------------------
+
+## Regression Visualization (Interactive, Your Style)
+
+```{r regression_viz_interactive}
+g <- ggplot(dat, aes(x = CCMR.Grads, y = ViolentRate)) + 
+  geom_point(shape = 23, size = 2.25, fill = "#05f9ff", col = "#00241B") + 
+  geom_smooth(method = "loess", col = "#ed1313") + 
+  labs(
+    x = "% of Graduates meeting at least 1 CCMR Criteria", 
+    y = "Violent Crime Rates per 1000",
+    title = "Violent Crime vs CCMR Graduates (Loess Fit)"
+  ) + 
+  theme(text = element_text(family = "serif", size = 12.5))
+
+ggplotly(g)
+```
+
+------------------------------------------------------------------------
+
+# Takeaways
+
+-   CCMR does **not** show a strong or consistent relationship with violent or property crime in this dataset. The scatterplots and regression models indicate little to no association once other factors are considered.
+
+-   Poverty has the strongest and most consistent factor related to both crime and educational outcomes. Districts with more poverty usually have more crime and lower student performance.
+
+-   Variables like poverty and how often families move matter more for crime than CCMR or graduation rates.
