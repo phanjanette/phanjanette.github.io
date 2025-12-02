@@ -1,14 +1,14 @@
 ## Workshop: Scraping webpages with R rvest package
 # Prerequisites: Chrome browser, Selector Gadget (https://selectorgadget.com/)
 
-# install.packages("tidyverse") to get data and clean up
+# install.packages("tidyverse")
 library(tidyverse)
 # install.packages("rvest")
 library(rvest)
 
 url <- 'https://en.wikipedia.org/wiki/List_of_countries_by_foreign-exchange_reserves'
 #Reading the HTML code from the Wiki website
-wikiforreserve <- read_html(url) 
+wikiforreserve <- read_html(url)
 class(wikiforreserve)
 
 ## Get the XPath data using Inspect element feature in Safari, Chrome or Firefox
@@ -21,7 +21,7 @@ foreignreserve <- wikiforreserve %>%
 class(foreignreserve)
 fores = foreignreserve[[1]]
 
-#assign new names and clean up
+
 names(fores) <- c("Rank", "Country", "Forexres", "Date", "Change", "Sources")
 colnames(fores)
 

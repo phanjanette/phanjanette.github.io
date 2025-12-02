@@ -1,0 +1,46 @@
+---
+title: "Assignment 4"
+format: html
+---
+
+```{r}
+# install.packages("tidyverse")
+library(tidyverse)
+# install.packages("rvest")
+library(rvest)
+# install.packages("stringr")
+library(stringr)
+
+url <- 'https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)'
+# Reading the HTML code from the Wiki website
+wiki_gdp <- read_html(url)
+class(wiki_gdp)
+
+
+gdp_tables <- wiki_gdp %>%
+  html_nodes(xpath='//*[@id="mw-content-text"]/div[1]/table[2]') %>%
+  html_table()
+class(gdp_tables)
+gdp <- gdp_tables[[1]]
+
+names(gdp) <- c("Rank", "Country", "GDP_USD", "Year", "Source")
+
+colnames(gdp)
+head(gdp$Country, n = 10)
+
+## Clean up variables
+## What type is Rank?
+## How about Date? How to fix it?
+gdp$Rank <- as.numeric(gdp$Rank)
+
+gdp$newyear <- str_split_fixed(gdp$Year, "\\[", n = 2)[, 1]
+gdp$newyear <- trimws(gdp$newyear)
+
+gdp <- gdp[, c("Rank", "Country", "GDP_USD", "newyear")]
+
+write.csv(gdp, "gdp_table.csv", row.names = FALSE)
+
+print(gdp, width = Inf)
+
+
+```
