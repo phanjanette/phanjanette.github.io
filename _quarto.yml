@@ -12,7 +12,7 @@ website:
           - assignment01.qmd
           - assignment02.qmd
           - assignment03.qmd
-          - assignment04.qmd
+          - assignment4.qmd
       - text: "Reviews"
         file: reviews.qmd
       - text: "CV/Resume"
