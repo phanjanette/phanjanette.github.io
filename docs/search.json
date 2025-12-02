@@ -28,6 +28,13 @@
     "text": "I downloaded the CSV from Google Trends for the terms “Trump, Kamala, Election” (past 12 months).\nThe CSV provides weekly intervals of search interest for each term.\n\n# Load manual CSV\nmanual_df &lt;- read.csv(\"assignment02/TrumpHarrisElection.csv\", skip = 2)\n\n# Rename columns\ncolnames(manual_df) &lt;- c(\"Week\", \"Trump\", \"Harris\", \"Election\")\n\n# Convert Week to Date\nmanual_df$Week &lt;- as.Date(manual_df$Week)\n\n# Replace \"&lt;1\" with 0 and convert to numeric / cleaning data\nmanual_df$Trump    &lt;- as.numeric(gsub(\"&lt;1\", \"0\", manual_df$Trump))\nmanual_df$Harris   &lt;- as.numeric(gsub(\"&lt;1\", \"0\", manual_df$Harris))\nmanual_df$Election &lt;- as.numeric(gsub(\"&lt;1\", \"0\", manual_df$Election))\n\n# Preview\nhead(manual_df)\n\n        Week Trump Harris Election\n1 2024-09-15     7      2        1\n2 2024-09-22     3      2        1\n3 2024-09-29     4      2        1\n4 2024-10-06     4      2        1\n5 2024-10-13     5      3        2\n6 2024-10-20     6      3        3\n\n# Plotting CSV data\nlibrary(ggplot2)\nggplot(manual_df, aes(x = Week)) +\n  geom_line(aes(y = Trump, color = \"Trump\"), linewidth = 1) +\n  geom_line(aes(y = Harris, color = \"Harris\"), linewidth = 1) +\n  geom_line(aes(y = Election, color = \"Election\"), linewidth = 1) +\n  labs(title = \"Google Trends (Manual CSV): Trump, Harris, Election\",\n       x = \"Date\", y = \"Search Interest\") +\n  scale_color_manual(values = c(\"Trump\"=\"red\",\"Harris\"=\"blue\",\"Election\"=\"orange\")) +\n  theme_minimal()"
   },
   {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
     "title": "Post With Code",
@@ -35,11 +42,11 @@
     "text": "This is a post with executable code.\n\n1 + 1\n\n[1] 2"
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
+    "objectID": "assignment4.html",
+    "href": "assignment4.html",
+    "title": "Assignment 4",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "# install.packages(\"tidyverse\")\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.1     ✔ stringr   1.5.2\n✔ ggplot2   4.0.0     ✔ tibble    3.3.0\n✔ lubridate 1.9.4     ✔ tidyr     1.3.1\n✔ purrr     1.1.0     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n# install.packages(\"rvest\")\nlibrary(rvest)\n\n\nAttaching package: 'rvest'\n\nThe following object is masked from 'package:readr':\n\n    guess_encoding\n\n# install.packages(\"stringr\")\nlibrary(stringr)\n\nurl &lt;- 'https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)'\n# Reading the HTML code from the Wiki website\nwiki_gdp &lt;- read_html(url)\nclass(wiki_gdp)\n\n[1] \"xml_document\" \"xml_node\"    \n\ngdp_tables &lt;- wiki_gdp %&gt;%\n  html_nodes(xpath='//*[@id=\"mw-content-text\"]/div[1]/table[2]') %&gt;%\n  html_table()\nclass(gdp_tables)\n\n[1] \"list\"\n\ngdp &lt;- gdp_tables[[1]]\n\nnames(gdp) &lt;- c(\"Rank\", \"Country\", \"GDP_USD\", \"Year\", \"Source\")\n\nWarning: The `value` argument of `names&lt;-()` must have the same length as `x` as of\ntibble 3.0.0.\n\ncolnames(gdp)\n\n[1] \"Rank\"    \"Country\" \"GDP_USD\" \"Year\"   \n\nhead(gdp$Country, n = 10)\n\n [1] \"117,165,394\" \"30,615,743\"  \"19,398,577\"  \"5,013,574\"   \"4,279,828\"  \n [6] \"4,125,213\"   \"3,958,780\"   \"3,361,557\"   \"2,543,677\"   \"2,540,656\"  \n\n## Clean up variables\n## What type is Rank?\n## How about Date? How to fix it?\ngdp$Rank &lt;- as.numeric(gdp$Rank)\n\nWarning: NAs introduced by coercion\n\ngdp$newyear &lt;- str_split_fixed(gdp$Year, \"\\\\[\", n = 2)[, 1]\ngdp$newyear &lt;- trimws(gdp$newyear)\n\ngdp &lt;- gdp[, c(\"Rank\", \"Country\", \"GDP_USD\", \"newyear\")]\n\nwrite.csv(gdp, \"gdp_table.csv\", row.names = FALSE)\n\nprint(gdp, width = Inf)\n\n# A tibble: 222 × 4\n    Rank Country     GDP_USD     newyear    \n   &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;      \n 1    NA 117,165,394 111,326,370 100,834,796\n 2    NA 30,615,743  29,184,890  27,720,700 \n 3    NA 19,398,577  18,743,803  17,794,782 \n 4    NA 5,013,574   4,659,929   4,525,704  \n 5    NA 4,279,828   4,026,211   4,204,495  \n 6    NA 4,125,213   3,912,686   3,575,778  \n 7    NA 3,958,780   3,643,834   3,380,855  \n 8    NA 3,361,557   3,162,079   3,051,832  \n 9    NA 2,543,677   2,372,775   2,300,941  \n10    NA 2,540,656   2,173,836   2,008,419  \n# ℹ 212 more rows"
   },
   {
     "objectID": "assignment03.html",
@@ -54,89 +61,5 @@
     "title": "Janette Phan",
     "section": "",
     "text": "I’m Janette Phan, a graduate student in Applied Cognition and Neuroscience at UT Dallas. My background is in Cognitive Science with a focus on cognitive neuroscience and AI, and I’m interested in using data and research to better understand how people think, learn, and interact with technology."
-  },
-  {
-    "objectID": "InteractivePlots.html",
-    "href": "InteractivePlots.html",
-    "title": "Education and Crime: Interactive Plots",
-    "section": "",
-    "text": "This report explores how educational outcomes (Graduation Rate and College/Career/Military Readiness — CCMR) relate to violent and property crime across Dallas County districts.\n\nViolentRate and PropertyRate = crime per 1,000 residents\n\nPovertyRate = percent in poverty\n\nAll visualizations are interactive Plotly charts.\nRegression models are shown using lm() and sjPlot::tab_model()."
-  },
-  {
-    "objectID": "InteractivePlots.html#graduation-vs-violent-crime-rate",
-    "href": "InteractivePlots.html#graduation-vs-violent-crime-rate",
-    "title": "Education and Crime: Interactive Plots",
-    "section": "1. Graduation vs Violent Crime Rate",
-    "text": "1. Graduation vs Violent Crime Rate"
-  },
-  {
-    "objectID": "InteractivePlots.html#ccmr-vs-property-crime-rate",
-    "href": "InteractivePlots.html#ccmr-vs-property-crime-rate",
-    "title": "Education and Crime: Interactive Plots",
-    "section": "2. CCMR vs Property Crime Rate",
-    "text": "2. CCMR vs Property Crime Rate"
-  },
-  {
-    "objectID": "InteractivePlots.html#correlation-heatmap",
-    "href": "InteractivePlots.html#correlation-heatmap",
-    "title": "Education and Crime: Interactive Plots",
-    "section": "3. Correlation Heatmap",
-    "text": "3. Correlation Heatmap"
-  },
-  {
-    "objectID": "InteractivePlots.html#property-crime-rate-vs-violent-crime-rate",
-    "href": "InteractivePlots.html#property-crime-rate-vs-violent-crime-rate",
-    "title": "Education and Crime: Interactive Plots",
-    "section": "4. Property Crime Rate vs Violent Crime Rate",
-    "text": "4. Property Crime Rate vs Violent Crime Rate"
-  },
-  {
-    "objectID": "InteractivePlots.html#regression-visualization-interactive-your-style",
-    "href": "InteractivePlots.html#regression-visualization-interactive-your-style",
-    "title": "Education and Crime: Interactive Plots",
-    "section": "Regression Visualization (Interactive, Your Style)",
-    "text": "Regression Visualization (Interactive, Your Style)"
-  },
-  {
-    "objectID": "EPPS_Plots_Final.html",
-    "href": "EPPS_Plots_Final.html",
-    "title": "Dallas County: Education vs Crime — Interactive Visuals & Regression Models",
-    "section": "",
-    "text": "This report explores how educational outcomes (Graduation Rate and College/Career/Military Readiness — CCMR) relate to violent and property crime across Dallas County districts.\n\nViolentRate and PropertyRate = crime per 1,000 residents\n\nPovertyRate = percent in poverty\n\nAll visualizations are interactive Plotly charts.\nRegression models are shown using lm() and sjPlot::tab_model()."
-  },
-  {
-    "objectID": "EPPS_Plots_Final.html#graduation-vs-violent-crime-rate",
-    "href": "EPPS_Plots_Final.html#graduation-vs-violent-crime-rate",
-    "title": "Dallas County: Education vs Crime — Interactive Visuals & Regression Models",
-    "section": "1. Graduation vs Violent Crime Rate",
-    "text": "1. Graduation vs Violent Crime Rate\n\np &lt;- ggplot(\n  df,\n  aes(\n    x = `Violent Crime Rate`,\n    y = `Grad Rate (%)`,\n    text = hover_txt,\n    color = `Poverty (%)`\n  )\n) +\n  geom_point(size = 3, alpha = 0.85) +\n  geom_smooth(method = \"lm\", se = TRUE, alpha = 0.15) +\n  scale_color_gradientn(colors = viridis(256), name = \"Poverty (%)\") +\n  labs(\n    title = \"Graduation Rate vs Violent Crime Rate\",\n    x = \"Violent crime rate (per 1,000 residents)\",\n    y = \"Graduation Rate (%)\"\n  ) +\n  theme_minimal(base_size = 13)\n\nggplotly(p, tooltip = \"text\")"
-  },
-  {
-    "objectID": "EPPS_Plots_Final.html#ccmr-vs-property-crime-rate",
-    "href": "EPPS_Plots_Final.html#ccmr-vs-property-crime-rate",
-    "title": "Dallas County: Education vs Crime — Interactive Visuals & Regression Models",
-    "section": "2. CCMR vs Property Crime Rate",
-    "text": "2. CCMR vs Property Crime Rate\n\nq &lt;- ggplot(\n  df,\n  aes(\n    x = `Property Crime Rate`,\n    y = `CCMR (%)`,\n    text = hover_txt,\n    color = `Poverty (%)`\n  )\n) +\n  geom_point(size = 3, alpha = 0.85) +\n  geom_smooth(method = \"lm\", se = TRUE, alpha = 0.15) +\n  scale_color_gradientn(colors = viridis(256), name = \"Poverty (%)\") +\n  labs(\n    title = \"CCMR vs Property Crime Rate\",\n    x = \"Property crime rate (per 1,000 residents)\",\n    y = \"CCMR (%)\"\n  ) +\n  theme_minimal(base_size = 13)\n\nggplotly(q, tooltip = \"text\")"
-  },
-  {
-    "objectID": "EPPS_Plots_Final.html#correlation-heatmap",
-    "href": "EPPS_Plots_Final.html#correlation-heatmap",
-    "title": "Dallas County: Education vs Crime — Interactive Visuals & Regression Models",
-    "section": "3. Correlation Heatmap",
-    "text": "3. Correlation Heatmap\n\n# Select numeric variables of interest\ncorr_df &lt;- df |&gt;\n  dplyr::select(\n    `Grad Rate (%)`,\n    `CCMR (%)`,\n    `Violent Crime Rate`,\n    `Property Crime Rate`,\n    `Poverty (%)`\n  )\n\n# Correlation matrix\ncorr_mat &lt;- round(cor(corr_df, use = \"pairwise.complete.obs\"), 2)\n\n# Convert to long format\ncorr_long &lt;- as.data.frame(as.table(corr_mat))\ncolnames(corr_long) &lt;- c(\"Var1\", \"Var2\", \"Correlation\")\n\ncorr_long &lt;- corr_long |&gt;\n  mutate(\n    hover_txt = paste0(\n      \"&lt;b&gt;\", Var1, \"&lt;/b&gt; vs &lt;b&gt;\", Var2, \"&lt;/b&gt;\",\n      \"&lt;br&gt;Correlation: \", sprintf(\"%.2f\", Correlation)\n    )\n  )\n\nheatmap &lt;- ggplot(\n  corr_long,\n  aes(\n    x = Var1,\n    y = Var2,\n    fill = Correlation,\n    text = hover_txt\n  )\n) +\n  geom_tile(color = \"white\") +\n  scale_fill_gradient2(\n    low = \"blue\",\n    mid = \"white\",\n    high = \"red\",\n    midpoint = 0,\n    name = \"Correlation\"\n  ) +\n  geom_text(aes(label = sprintf(\"%.2f\", Correlation)), size = 3) +\n  coord_equal() +\n  theme_minimal(base_size = 13) +\n  theme(\n    axis.text.x = element_text(angle = 45, hjust = 1),\n    plot.title = element_text(face = \"bold\")\n  ) +\n  labs(\n    title = \"Correlation Heatmap: Education, Crime, and Poverty\",\n    x = NULL,\n    y = NULL\n  )\n\nggplotly(heatmap, tooltip = \"text\")"
-  },
-  {
-    "objectID": "EPPS_Plots_Final.html#property-crime-rate-vs-violent-crime-rate",
-    "href": "EPPS_Plots_Final.html#property-crime-rate-vs-violent-crime-rate",
-    "title": "Dallas County: Education vs Crime — Interactive Visuals & Regression Models",
-    "section": "4. Property Crime Rate vs Violent Crime Rate",
-    "text": "4. Property Crime Rate vs Violent Crime Rate\n\nr &lt;- ggplot(\n  df,\n  aes(\n    x = `Property Crime Rate`,\n    y = `Violent Crime Rate`,\n    text = hover_txt,\n    color = `Poverty (%)`\n  )\n) +\n  geom_point(size = 3, alpha = 0.85) +\n  scale_color_gradientn(colors = viridis(256), name = \"Poverty (%)\") +\n  labs(\n    title = \"Property vs Violent Crime Rates\",\n    x = \"Property crime rate (per 1,000 residents)\",\n    y = \"Violent crime rate (per 1,000 residents)\"\n  ) +\n  theme_minimal(base_size = 13)\n\nggplotly(r, tooltip = \"text\")"
-  },
-  {
-    "objectID": "EPPS_Plots_Final.html#regression-visualization-interactive-your-style",
-    "href": "EPPS_Plots_Final.html#regression-visualization-interactive-your-style",
-    "title": "Dallas County: Education vs Crime — Interactive Visuals & Regression Models",
-    "section": "Regression Visualization (Interactive, Your Style)",
-    "text": "Regression Visualization (Interactive, Your Style)\n\ng &lt;- ggplot(dat, aes(x = CCMR.Grads, y = ViolentRate)) + \n  geom_point(shape = 23, size = 2.25, fill = \"#05f9ff\", col = \"#00241B\") + \n  geom_smooth(method = \"loess\", col = \"#ed1313\") + \n  labs(\n    x = \"% of Graduates meeting at least 1 CCMR Criteria\", \n    y = \"Violent Crime Rates per 1000\",\n    title = \"Violent Crime vs CCMR Graduates (Loess Fit)\"\n  ) + \n  theme(text = element_text(family = \"serif\", size = 12.5))\n\nggplotly(g)"
   }
 ]
