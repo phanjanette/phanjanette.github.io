@@ -9,12 +9,18 @@ website:
         file: index.qmd
       - text: "Assignments"
         menu:
-          - assignment01.qmd
-          - assignment02.qmd
-          - assignment03.qmd
-          - assignment04.qmd
-          - assignment05.qmd
-          - assignment06.qmd
+          - text: "Assignment 1"
+            file: assignment01.qmd
+          - text: "Assignment 2"
+            file: assignment02.qmd
+          - text: "Assignment 3"
+            file: assignment03.qmd
+          - text: "Assignment 4"
+            file: assignment04.qmd
+          - text: "Assignment 5"
+            file: assignment05.qmd
+          - text: "Assignment 6"
+            file: assignment06.qmd
       - text: "Reviews"
         file: reviews.qmd
       - text: "CV/Resume"

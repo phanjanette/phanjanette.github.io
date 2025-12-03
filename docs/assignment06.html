@@ -200,7 +200,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#quanteda_textanalytics01a.r" id="toc-quanteda_textanalytics01a.r" class="nav-link active" data-scroll-target="#quanteda_textanalytics01a.r">quanteda_textanalytics01a.R</a></li>
   <li><a href="#quanteda_textanalytics02a.r" id="toc-quanteda_textanalytics02a.r" class="nav-link" data-scroll-target="#quanteda_textanalytics02a.r">quanteda_textanalytics02a.R</a></li>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a>
+  <ul class="collapse">
+  <li><a href="#biden-xi-summit-twitter-data" id="toc-biden-xi-summit-twitter-data" class="nav-link" data-scroll-target="#biden-xi-summit-twitter-data">Biden-Xi Summit Twitter Data</a></li>
+  <li><a href="#us-presidential-inauguarl-speeches" id="toc-us-presidential-inauguarl-speeches" class="nav-link" data-scroll-target="#us-presidential-inauguarl-speeches">Us Presidential Inauguarl Speeches</a></li>
+  </ul></li>
   <li><a href="#what-is-wordfish" id="toc-what-is-wordfish" class="nav-link" data-scroll-target="#what-is-wordfish">What is Wordfish?</a></li>
   </ul>
 </nav>
@@ -227,8 +231,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="quanteda_textanalytics01a.r" class="level3">
-<h3 class="anchored" data-anchor-id="quanteda_textanalytics01a.r">quanteda_textanalytics01a.R</h3>
+<section id="quanteda_textanalytics01a.r" class="level1">
+<h1>quanteda_textanalytics01a.R</h1>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample program for using quanteda for text modeling and analysis</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Documentation: vignette("quickstart", package = "quanteda")</span></span>
@@ -553,8 +557,8 @@ president      with   jinping        of        on       for        in     china
 </div>
 </div>
 </section>
-<section id="quanteda_textanalytics02a.r" class="level2">
-<h2 class="anchored" data-anchor-id="quanteda_textanalytics02a.r">quanteda_textanalytics02a.R</h2>
+<section id="quanteda_textanalytics02a.r" class="level1">
+<h1>quanteda_textanalytics02a.R</h1>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quanteda Text Statistics and Analysis Workshop</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Advanced text analysis using US Presidential Inaugural Addresses</span></span>
@@ -1100,11 +1104,26 @@ docs                   the expression       of     those   thoughts
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="analysis" class="level2">
-<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<section id="analysis" class="level1">
+<h1>Analysis</h1>
+<section id="biden-xi-summit-twitter-data" class="level2">
+<h2 class="anchored" data-anchor-id="biden-xi-summit-twitter-data">Biden-Xi Summit Twitter Data</h2>
+<ul>
+<li>There was a lot of mention of China and foreign relations</li>
+<li>String engagement of news and current events (news related hashtags)</li>
+</ul>
 </section>
-<section id="what-is-wordfish" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-wordfish">What is Wordfish?</h2>
+<section id="us-presidential-inauguarl-speeches" class="level2">
+<h2 class="anchored" data-anchor-id="us-presidential-inauguarl-speeches">Us Presidential Inauguarl Speeches</h2>
+<ul>
+<li>The older era speeches focused more on “people,” “nation,” “constitution,” “government” reflecting themes of a developing nation and government</li>
+<li>The more recent era speeches focus on different political ideologies for each recent president that was looked at. For example, Obama had language that reflected themes of being united, Bush had lanaguage that reflected themes of freedom, and Trump had lanagauge reflecting nationalism.</li>
+</ul>
+</section>
+</section>
+<section id="what-is-wordfish" class="level1">
+<h1>What is Wordfish?</h1>
+<p>Wordfish is a Poison scaling model that estimates 1-D document positions using its maximum likelihood. Both estimated positions of the words and the position of the documents can be plotted. The plot looks like a fish tail.</p>
 
 
 </section>
